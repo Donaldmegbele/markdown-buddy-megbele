@@ -1,0 +1,145 @@
+---
+title: "Student Performance Analysis"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Purpose
+
+This report documents the accompanying `student_performance_analysis.R`
+script. It demonstrates a beginner-friendly R workflow: generate fictional
+student records, calculate descriptive statistics, and visualize simulated
+exam scores against study hours.
+
+All data are synthetic. The analysis is an exercise in R documentation and
+reproducibility, not a study of real students.
+
+## Questions
+
+1. What are the mean, median, minimum, maximum, and standard deviation of the
+   simulated numerical variables?
+2. What does a scatter plot show about study hours and simulated exam scores?
+
+# Inputs
+
+The script requires no external dataset. It uses `set.seed(42)` to
+generate 50 fictional observations.
+
+| Variable | Description |
+| --- | --- |
+| `student_id` | Fictional identifier (`S001` to `S050`) |
+| `study_hours` | Simulated weekly study time (1 to 10 hours) |
+| `attendance_pct` | Simulated attendance (60% to 100%) |
+| `exam_score` | Simulated exam score, rounded and bounded by 0 and 100 |
+
+The score formula includes study hours, attendance, and random variation.
+Consequently, any relationships in the generated data are built into the
+simulation and must not be interpreted as real-world evidence.
+
+# Method and Code Examples
+
+## Run the R script
+
+The following R chunk executes the original script. Keep the `.Rmd` and
+`.R` files in the same project folder when knitting. The script also
+creates an `outputs/` directory containing CSV files and a PNG plot.
+
+```{r run-script, results='hide'}
+source("student_performance_analysis.R", local = TRUE)
+```
+
+## Preview the generated data
+
+The first five fictional records provide a quick check of the dataset's
+structure.
+
+```{r preview-data}
+head(students, 5)
+```
+
+## Summary statistics
+
+The script calculates the mean, median, minimum, maximum, and sample standard
+deviation of study hours, attendance, and exam scores.
+
+```{r summary-statistics}
+knitr::kable(
+  summary_stats,
+  caption = "Descriptive statistics for the synthetic student dataset"
+)
+```
+
+## Scatter plot
+
+The points represent individual fictional students. The red line shows the
+fitted linear relationship between weekly study hours and exam scores.
+
+```{r study-hours-plot, fig.width=8, fig.height=5, fig.cap="Study hours versus simulated exam scores"}
+plot(
+  students$study_hours, students$exam_score,
+  main = "Study Hours vs Exam Score (Synthetic Data)",
+  xlab = "Weekly Study Hours",
+  ylab = "Exam Score (%)",
+  pch = 19,
+  col = "steelblue",
+  ylim = c(0, 100)
+)
+abline(
+  lm(exam_score ~ study_hours, data = students),
+  col = "firebrick",
+  lwd = 2
+)
+grid()
+```
+
+# Outputs
+
+Running the R script produces:
+
+| Output file | Purpose |
+| --- | --- |
+| `outputs/student_data.csv` | 50 fictional student records |
+| `outputs/summary_statistics.csv` | Descriptive statistics for the three numerical variables |
+| `outputs/study_hours_vs_exam_score.png` | Standalone scatter plot with fitted trend line |
+
+Knitting this document to HTML also produces an
+`student_performance_analysis.html` report with the summary table and plot
+embedded in the document.
+
+# Interpretation and Limitations
+
+In this simulated sample, the correlation between study hours and exam scores
+is `r round(cor(students$study_hours, students$exam_score), 2)`.
+This value is calculated when the document is knitted; it is not manually
+entered.
+
+Because the exam-score formula explicitly includes study hours and
+attendance, the apparent association is part of the data-generation
+process. Random variation and the 0-to-100 score limits also affect the
+appearance of the plot. No conclusions about actual student performance
+should be drawn from these results.
+
+# Conclusion
+
+The report demonstrates how to combine an existing R script with explanatory
+text, reproducible calculations, a formatted statistics table, and a
+visualization using R Markdown.
+
+# AI Assistance Disclosure
+
+AI Assistance Declaration: I used ChatGPT to suggest R Markdown structure and code examples, improve headings and syntax highlighting, and review the document against R Markdown formatting conventions.
+
+Prompts used: The complete prompt guide, including prompts and key AI responses, can be found in the project appendix.
+
+Verification: I verified the AI-generated documentation by comparing it with the accompanying `student_performance_analysis.R` script, successfully knitting the R Markdown file, and reviewing the generated HTML document, including its headings, code blocks, summary statistics, and visualizations.
+
+All final calculations were done by myself. I am responsible for the accuracy and originality of this work.
